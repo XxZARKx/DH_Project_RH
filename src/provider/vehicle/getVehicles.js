@@ -11,6 +11,6 @@ export const getVehicles = async () => {
 		return data;
 	} catch (error) {
 		console.error("Error al obtener los vehículos:", error);
-		return []; // Si hay error, devolver un array vacío
+		return [];
 	}
 };

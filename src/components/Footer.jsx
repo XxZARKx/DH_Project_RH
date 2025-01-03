@@ -9,16 +9,18 @@ const Footer = () => {
 			style={{ backgroundColor: "#9C9C9C" }}>
 			<nav className="w-full flex items-center justify-between">
 				<div className="flex w-[30%] items-center justify-between flex-wrap">
-					<img
-						src={logo}
-						alt="logo"
-						style={{
-							width: "120px",
-							height: "120px",
-							objectFit: "cover",
-							cursor: "pointer",
-						}}
-					/>
+					<Link to={"/"}>
+						<img
+							src={logo}
+							alt="logo"
+							style={{
+								width: "120px",
+								height: "120px",
+								objectFit: "cover",
+								cursor: "pointer",
+							}}
+						/>
+					</Link>
 					<div className="flex flex-col h-full">
 						<h3 className="text-xl text-[#ffffff] pb-4 underline">
 							Encuentranos en:

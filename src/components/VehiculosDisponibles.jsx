@@ -2,24 +2,23 @@ import React, { useEffect, useState } from "react";
 import Header from "./Header";
 import Footer from "./Footer";
 import { getVehicles } from "../provider/vehicle/getVehicles";
+import CardAuto from "./CardAuto";
 
 const VehiculosDisponibles = () => {
 	const [vehicles, setVehicles] = useState([]);
-	const [isLoading, setIsLoading] = useState(true); // Estado para el cargando
+	const [isLoading, setIsLoading] = useState(true);
 
-	// Usar useEffect para cargar los vehículos cuando el componente se monte
 	useEffect(() => {
 		const fetchVehicles = async () => {
-			setIsLoading(true); // Activar cargando
+			setIsLoading(true);
 			const vehicleData = await getVehicles();
-			setVehicles(vehicleData); // Establecer los vehículos en el estado
-			setIsLoading(false); // Desactivar cargando
+			setVehicles(vehicleData);
+			setIsLoading(false);
 		};
 
-		fetchVehicles(); // Llamar la función para obtener los vehículos
+		fetchVehicles();
 	}, []);
 
-	// Mostrar un mensaje mientras se cargan los vehículos
 	if (isLoading) {
 		return <div>Cargando vehículos...</div>;
 	}
@@ -27,21 +26,16 @@ const VehiculosDisponibles = () => {
 	return (
 		<div>
 			<Header />
-			<div className="min-h-screen bg-[#E4E4E4] flex items-center justify-center py-10">
-				<div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
+			<div className="min-h-screen flex items-center justify-center py-10 w-[80%] mx-auto px-10">
+				<div className="bg-white shadow-lg rounded-lg p-8 w-full flex items-center justify-center flex-col">
 					<h2 className="text-2xl font-bold text-gray-700 text-center mb-6">
 						Vehículos Disponibles
 					</h2>
-					<ul className="space-y-4">
+					<ul className="flex flex-wrap justify-center gap-10 w-full">
 						{vehicles.length > 0 ? (
 							vehicles.map((vehicle) => (
-								<li key={vehicle.id} className="border-b border-gray-300 py-4">
-									<div className="font-semibold">
-										{vehicle.marca} {vehicle.modelo}
-									</div>
-									<div>Placa: {vehicle.placa}</div>
-									<div>Estado: {vehicle.estado}</div>
-									<div>Precio: ${vehicle.precio}</div>
+								<li className="w-full sm:w-[48%] lg:w-[30%] max-w-[300px] flex-grow-0 flex-shrink-0">
+									<CardAuto vehicle={vehicle} />
 								</li>
 							))
 						) : (
