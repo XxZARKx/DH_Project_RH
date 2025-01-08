@@ -8,31 +8,75 @@ import RegistrarVehiculo from "./components/RegistrarVehiculo";
 import VehiculosDisponibles from "./components/VehiculosDisponibles";
 import DetallesVehiculo from "./components/DetallesVehiculo";
 import PanelAdmin from "./components/PanelAdmin";
+import ProtectedRoute from "./components/ProtectedRoute";
+import AccessDenied from "./components/AccessDenied";
+
+const getUserFromLocalStorage = () => {
+  try {
+    const userData = localStorage.getItem("user");
+    if (!userData) return null;
+    return JSON.parse(userData);
+  } catch (error) {
+    console.error("Error al analizar los datos del usuario:", error);
+    return null;
+  }
+};
 
 function App() {
-	return (
-		<div className="bg-[#E4E4E4] bg-[#red]">
-			<BrowserRouter>
-				<Routes>
-					<Route path="/" element={<Home />} />
-					<Route path="/login" element={<Login />} />
-					<Route
-						path="/register"
-						element={<Register tipo={2} titulo="Registrar Cliente" />}
-					/>
-					<Route
-						path="/register/admin"
-						element={<Register tipo={1} titulo="Registrar Empleado" />}
-					/>
-					<Route path="/vehicles/register" element={<RegistrarVehiculo />} />
-					<Route path="/vehicles" element={<VehiculosDisponibles />} />
-					<Route path="/admin/panel" element={<PanelAdmin />} />
-					<Route path="/admin/panel/:pestania" element={<PanelAdmin />} />
-					<Route path="/vehicles/:id" element={<DetallesVehiculo />} />
-				</Routes>
-			</BrowserRouter>
-		</div>
-	);
+  const user = getUserFromLocalStorage();
+
+  return (
+    <div className="bg-[#E4E4E4] bg-[#red]">
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route
+            path="/register"
+            element={<Register tipo={2} titulo="Registrar Cliente" />}
+          />
+          <Route path="/vehicles" element={<VehiculosDisponibles />} />
+          <Route path="/vehicles/:id" element={<DetallesVehiculo />} />
+
+          {/* Rutas protegidas */}
+          <Route
+            path="/register/admin"
+            element={
+              <ProtectedRoute user={user} requiredTipo={1}>
+                <Register tipo={1} titulo="Registrar Empleado" />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/vehicles/register"
+            element={
+              <ProtectedRoute user={user} requiredTipo={1}>
+                <RegistrarVehiculo />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/panel"
+            element={
+              <ProtectedRoute user={user} requiredTipo={1}>
+                <PanelAdmin />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/panel/:pestania"
+            element={
+              <ProtectedRoute user={user} requiredTipo={1}>
+                <PanelAdmin />
+              </ProtectedRoute>
+            }
+          />
+          <Route path="*" element={<div>Página no encontrada</div>} />
+          <Route path="/access-denied" element={<AccessDenied />} />
+        </Routes>
+      </BrowserRouter>
+    </div>
+  );
 }
 
 export default App;
