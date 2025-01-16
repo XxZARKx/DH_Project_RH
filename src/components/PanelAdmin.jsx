@@ -5,6 +5,7 @@ import Footer from "./Footer";
 import PanelVehicles from "./PanelVehicles";
 import PanelUsers from "./PanelUsers";
 import PanelReservations from "./PanelReservation";
+import IngresosDiarios from "./IngresosDiarios";
 
 const PanelAdmin = () => {
   const { pestania } = useParams();
@@ -21,6 +22,9 @@ const PanelAdmin = () => {
       break;
     case "pedidos":
       panelContent = <PanelReservations />;
+      break;
+    case "ingresos":
+      panelContent = <IngresosDiarios />;
       break;
     default:
       panelContent = (
@@ -60,6 +64,14 @@ const PanelAdmin = () => {
                 className="hover:bg-gray-700 p-2 rounded block"
               >
                 Pedidos
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/admin/panel/ingresos"
+                className="hover:bg-gray-700 p-2 rounded block"
+              >
+                Ingresos
               </Link>
             </li>
           </ul>
