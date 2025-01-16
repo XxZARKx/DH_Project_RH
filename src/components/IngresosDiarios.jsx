@@ -11,22 +11,40 @@ const IngresosDiarios = () => {
 
   // Función para obtener los ingresos dentro de un rango de fechas
   const fetchIngresos = async () => {
+    const startDateISO = startDate
+      ? new Date(new Date(startDate).setHours(0, 0, 0, 0)).toISOString()
+      : "1970-01-01T00:00:00.000Z";
+
+    const endDateISO = endDate
+      ? endDate.toISOString()
+      : new Date().toISOString();
+
     const { data, error } = await supabase
       .from("reserva")
       .select("total, fecha_reserva")
-      .gte("fecha_reserva", startDate ? startDate.toISOString() : "1970-01-01")
-      .lte(
-        "fecha_reserva",
-        endDate ? endDate.toISOString() : new Date().toISOString()
-      );
+      .gte("fecha_reserva", startDateISO)
+      .lte("fecha_reserva", endDateISO);
 
     if (error) {
       console.error("Error al obtener ingresos:", error);
       throw new Error(error.message);
     }
 
-    console.log("Datos obtenidos de Supabase:", data);
-    return data;
+    // Agrupar ingresos por fecha
+    const ingresosAgrupados = data.reduce((acc, ingreso) => {
+      const fecha = new Date(ingreso.fecha_reserva).toLocaleDateString(); // Convertir fecha a formato legible
+      if (!acc[fecha]) {
+        acc[fecha] = 0;
+      }
+      acc[fecha] += ingreso.total; // Sumar ingresos por fecha
+      return acc;
+    }, {});
+
+    // Convertir el objeto agrupado en un array para facilitar el renderizado
+    return Object.entries(ingresosAgrupados).map(([fecha, total]) => ({
+      fecha,
+      total,
+    }));
   };
 
   // Query para obtener los datos
@@ -98,8 +116,7 @@ const IngresosDiarios = () => {
             <ul className="list-disc pl-5 mt-4 space-y-2">
               {ingresos?.map((ingreso, index) => (
                 <li key={index}>
-                  <strong>Fecha:</strong>{" "}
-                  {new Date(ingreso.fecha_reserva).toLocaleDateString()} -{" "}
+                  <strong>Fecha:</strong> {ingreso.fecha} -{" "}
                   <strong>Ingreso:</strong> S/ {ingreso.total.toFixed(2)}
                 </li>
               ))}
