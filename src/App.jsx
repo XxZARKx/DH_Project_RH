@@ -10,6 +10,8 @@ import DetallesVehiculo from "./components/DetallesVehiculo";
 import PanelAdmin from "./components/PanelAdmin";
 import ProtectedRoute from "./components/ProtectedRoute";
 import AccessDenied from "./components/AccessDenied";
+import ReservaVehiculo from "./components/ReservaVehiculo";
+import MisReservas from "./components/UserReservas";
 
 const getUserFromLocalStorage = () => {
   try {
@@ -37,6 +39,8 @@ function App() {
           />
           <Route path="/vehicles" element={<VehiculosDisponibles />} />
           <Route path="/vehicles/:id" element={<DetallesVehiculo />} />
+          <Route path="/reservation/:id" element={<ReservaVehiculo />} />
+          <Route path="/mis-reservas" element={<MisReservas />} />
 
           {/* Rutas protegidas */}
           <Route

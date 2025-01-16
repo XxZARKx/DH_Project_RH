@@ -19,7 +19,8 @@ const Header = () => {
 
   const handleLogout = () => {
     localStorage.removeItem("user");
-    setUser(null); // Actualiza el estado local al desloguear
+    setUser(null);
+    window.location.href = "/";
   };
 
   useEffect(() => {
