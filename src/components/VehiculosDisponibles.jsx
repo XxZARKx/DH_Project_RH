@@ -18,8 +18,13 @@ const VehiculosDisponibles = () => {
     queryFn: getVehicles,
   });
 
-  const totalPages = Math.ceil(vehicles.length / vehiclesPerPage);
-  const currentVehicles = vehicles.slice(
+  // Filtrar solo los vehículos con estado "Disponible"
+  const availableVehicles = vehicles.filter(
+    (vehicle) => vehicle.estado === "Disponible"
+  );
+
+  const totalPages = Math.ceil(availableVehicles.length / vehiclesPerPage);
+  const currentVehicles = availableVehicles.slice(
     (currentPage - 1) * vehiclesPerPage,
     currentPage * vehiclesPerPage
   );
