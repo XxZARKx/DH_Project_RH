@@ -6,6 +6,8 @@ import PanelVehicles from "./PanelVehicles";
 import PanelUsers from "./PanelUsers";
 import PanelReservations from "./PanelReservation";
 import IngresosDiarios from "./IngresosDiarios";
+import PopularVehicleBrands from "./PanelTopVehicles";
+import ReservationHistory from "./ReservationHistory";
 
 const PanelAdmin = () => {
   const { pestania } = useParams();
@@ -25,6 +27,12 @@ const PanelAdmin = () => {
       break;
     case "ingresos":
       panelContent = <IngresosDiarios />;
+      break;
+    case "top":
+      panelContent = <PopularVehicleBrands />;
+      break;
+    case "reservationHistory":
+      panelContent = <ReservationHistory />;
       break;
     default:
       panelContent = (
@@ -72,6 +80,22 @@ const PanelAdmin = () => {
                 className="hover:bg-gray-700 p-2 rounded block"
               >
                 Ingresos
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/admin/panel/top"
+                className="hover:bg-gray-700 p-2 rounded block"
+              >
+                Vehiculos Populares
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/admin/panel/reservationHistory"
+                className="hover:bg-gray-700 p-2 rounded block"
+              >
+                Historial de reservas
               </Link>
             </li>
           </ul>

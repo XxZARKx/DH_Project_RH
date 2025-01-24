@@ -1,11 +1,14 @@
 import { supabase } from "../../supabaseClient";
 
 export const getReservations = async () => {
-  const { data, error } = await supabase.from("reserva").select("*"); // Obtener todas las reservas
-
-  if (error) {
-    throw new Error(error.message);
+  try {
+    const { data, error } = await supabase.from("reserva").select("*");
+    if (error) {
+      throw new Error(error.message); // Si hay error en la consulta, lanzamos el error
+    }
+    return data;
+  } catch (err) {
+    // Usamos un nombre distinto para evitar la sobrescritura
+    throw new Error(err.message);
   }
-
-  return data;
 };
