@@ -1,14 +1,14 @@
-import { supabase } from "../../supabaseClient";
+import { supabase } from "../../../api/supabaseClient";
 
 export const updateReservationDate = async ({ reservationId, newDate }) => {
-  const { data, error } = await supabase
-    .from("reserva")
-    .update({ fecha_reserva: newDate }) // Asumiendo que el campo es 'fecha_reserva'
-    .eq("id", reservationId);
+	const { data, error } = await supabase
+		.from("reserva")
+		.update({ fecha_reserva: newDate }) // Asumiendo que el campo es 'fecha_reserva'
+		.eq("id", reservationId);
 
-  if (error) {
-    throw new Error(error.message);
-  }
+	if (error) {
+		throw new Error(error.message);
+	}
 
-  return data;
+	return data;
 };

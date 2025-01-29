@@ -1,4 +1,4 @@
-import { supabase } from "../../supabaseClient";
+import { supabase } from "../../../api/supabaseClient";
 
 export const getVehicleById = async (id) => {
 	try {
@@ -8,7 +8,7 @@ export const getVehicleById = async (id) => {
 			.eq("id", id)
 			.single(); // Asegúrate de que esperas un solo registro
 
-		console.log("Datos del vehículo:", data); // Verifica que los datos estén correctos
+		// console.log("Datos del vehículo:", data);
 
 		if (error) {
 			throw new Error(error.message);

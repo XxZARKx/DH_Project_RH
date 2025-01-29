@@ -1,4 +1,4 @@
-import { supabase } from "../../../supabaseClient";
+import { supabase } from "../../../../api/supabaseClient";
 
 export const registerClient = async (clientData) => {
 	const { nombre, apellido, dni, correo, contraseña, tipo } = clientData;

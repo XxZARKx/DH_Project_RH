@@ -3,129 +3,129 @@ import { useQuery } from "@tanstack/react-query";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css"; // Asegúrate de instalar react-datepicker
 
-import { supabase } from "../supabaseClient";
+import { supabase } from "../../api/supabaseClient";
 
 const IngresosDiarios = () => {
-  const [startDate, setStartDate] = useState(null);
-  const [endDate, setEndDate] = useState(null);
+	const [startDate, setStartDate] = useState(null);
+	const [endDate, setEndDate] = useState(null);
 
-  // Función para obtener los ingresos dentro de un rango de fechas
-  const fetchIngresos = async () => {
-    const startDateISO = startDate
-      ? new Date(new Date(startDate).setHours(0, 0, 0, 0)).toISOString()
-      : "1970-01-01T00:00:00.000Z";
+	// Función para obtener los ingresos dentro de un rango de fechas
+	const fetchIngresos = async () => {
+		const startDateISO = startDate
+			? new Date(new Date(startDate).setHours(0, 0, 0, 0)).toISOString()
+			: "1970-01-01T00:00:00.000Z";
 
-    const endDateISO = endDate
-      ? endDate.toISOString()
-      : new Date().toISOString();
+		const endDateISO = endDate
+			? endDate.toISOString()
+			: new Date().toISOString();
 
-    const { data, error } = await supabase
-      .from("reserva")
-      .select("total, fecha_reserva")
-      .gte("fecha_reserva", startDateISO)
-      .lte("fecha_reserva", endDateISO);
+		const { data, error } = await supabase
+			.from("reserva")
+			.select("total, fecha_reserva")
+			.gte("fecha_reserva", startDateISO)
+			.lte("fecha_reserva", endDateISO);
 
-    if (error) {
-      console.error("Error al obtener ingresos:", error);
-      throw new Error(error.message);
-    }
+		if (error) {
+			console.error("Error al obtener ingresos:", error);
+			throw new Error(error.message);
+		}
 
-    // Agrupar ingresos por fecha
-    const ingresosAgrupados = data.reduce((acc, ingreso) => {
-      const fecha = new Date(ingreso.fecha_reserva).toLocaleDateString(); // Convertir fecha a formato legible
-      if (!acc[fecha]) {
-        acc[fecha] = 0;
-      }
-      acc[fecha] += ingreso.total; // Sumar ingresos por fecha
-      return acc;
-    }, {});
+		// Agrupar ingresos por fecha
+		const ingresosAgrupados = data.reduce((acc, ingreso) => {
+			const fecha = new Date(ingreso.fecha_reserva).toLocaleDateString(); // Convertir fecha a formato legible
+			if (!acc[fecha]) {
+				acc[fecha] = 0;
+			}
+			acc[fecha] += ingreso.total; // Sumar ingresos por fecha
+			return acc;
+		}, {});
 
-    // Convertir el objeto agrupado en un array para facilitar el renderizado
-    return Object.entries(ingresosAgrupados).map(([fecha, total]) => ({
-      fecha,
-      total,
-    }));
-  };
+		// Convertir el objeto agrupado en un array para facilitar el renderizado
+		return Object.entries(ingresosAgrupados).map(([fecha, total]) => ({
+			fecha,
+			total,
+		}));
+	};
 
-  // Query para obtener los datos
-  const {
-    data: ingresos,
-    isLoading,
-    error,
-  } = useQuery({
-    queryKey: ["ingresos", startDate, endDate],
-    queryFn: fetchIngresos,
-    enabled: !!startDate && !!endDate, // La consulta se ejecuta solo si se seleccionan ambas fechas
-  });
+	// Query para obtener los datos
+	const {
+		data: ingresos,
+		isLoading,
+		error,
+	} = useQuery({
+		queryKey: ["ingresos", startDate, endDate],
+		queryFn: fetchIngresos,
+		enabled: !!startDate && !!endDate, // La consulta se ejecuta solo si se seleccionan ambas fechas
+	});
 
-  console.log("startDate:", startDate?.toISOString());
-  console.log("endDate:", endDate?.toISOString());
-  console.log("Datos filtrados por rango de fechas:", ingresos);
+	console.log("startDate:", startDate?.toISOString());
+	console.log("endDate:", endDate?.toISOString());
+	console.log("Datos filtrados por rango de fechas:", ingresos);
 
-  // Calcular el total de ingresos
-  const totalIngresos =
-    ingresos?.reduce((sum, ingreso) => sum + ingreso.total, 0) || 0;
+	// Calcular el total de ingresos
+	const totalIngresos =
+		ingresos?.reduce((sum, ingreso) => sum + ingreso.total, 0) || 0;
 
-  return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
-      <div className="bg-white p-6 rounded-lg shadow-lg max-w-2xl w-full">
-        <h1 className="text-2xl font-bold mb-4 text-center">
-          Ingresos Diarios
-        </h1>
+	return (
+		<div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
+			<div className="bg-white p-6 rounded-lg shadow-lg max-w-2xl w-full">
+				<h1 className="text-2xl font-bold mb-4 text-center">
+					Ingresos Diarios
+				</h1>
 
-        {/* Selector de rango de fechas */}
-        <div className="flex justify-between items-center mb-6">
-          <div>
-            <label className="block text-gray-600 text-sm font-medium mb-1">
-              Fecha de inicio:
-            </label>
-            <DatePicker
-              selected={startDate}
-              onChange={(date) => setStartDate(date)}
-              maxDate={endDate || new Date()}
-              className="border border-gray-300 rounded px-3 py-2 w-full"
-            />
-          </div>
-          <div>
-            <label className="block text-gray-600 text-sm font-medium mb-1">
-              Fecha de fin:
-            </label>
-            <DatePicker
-              selected={endDate}
-              onChange={(date) => setEndDate(date)}
-              minDate={startDate}
-              maxDate={new Date()}
-              className="border border-gray-300 rounded px-3 py-2 w-full"
-            />
-          </div>
-        </div>
+				{/* Selector de rango de fechas */}
+				<div className="flex justify-between items-center mb-6">
+					<div>
+						<label className="block text-gray-600 text-sm font-medium mb-1">
+							Fecha de inicio:
+						</label>
+						<DatePicker
+							selected={startDate}
+							onChange={(date) => setStartDate(date)}
+							maxDate={endDate || new Date()}
+							className="border border-gray-300 rounded px-3 py-2 w-full"
+						/>
+					</div>
+					<div>
+						<label className="block text-gray-600 text-sm font-medium mb-1">
+							Fecha de fin:
+						</label>
+						<DatePicker
+							selected={endDate}
+							onChange={(date) => setEndDate(date)}
+							minDate={startDate}
+							maxDate={new Date()}
+							className="border border-gray-300 rounded px-3 py-2 w-full"
+						/>
+					</div>
+				</div>
 
-        {/* Mostrar resultados */}
-        {isLoading ? (
-          <div className="text-center text-gray-500">Cargando ingresos...</div>
-        ) : error ? (
-          <div className="text-center text-red-500">
-            Error al cargar los datos: {error.message}
-          </div>
-        ) : (
-          <div>
-            <h2 className="text-lg font-semibold mb-3">Resultados:</h2>
-            <p className="text-gray-700">
-              <strong>Total de ingresos:</strong> S/ {totalIngresos.toFixed(2)}
-            </p>
-            <ul className="list-disc pl-5 mt-4 space-y-2">
-              {ingresos?.map((ingreso, index) => (
-                <li key={index}>
-                  <strong>Fecha:</strong> {ingreso.fecha} -{" "}
-                  <strong>Ingreso:</strong> S/ {ingreso.total.toFixed(2)}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
-      </div>
-    </div>
-  );
+				{/* Mostrar resultados */}
+				{isLoading ? (
+					<div className="text-center text-gray-500">Cargando ingresos...</div>
+				) : error ? (
+					<div className="text-center text-red-500">
+						Error al cargar los datos: {error.message}
+					</div>
+				) : (
+					<div>
+						<h2 className="text-lg font-semibold mb-3">Resultados:</h2>
+						<p className="text-gray-700">
+							<strong>Total de ingresos:</strong> S/ {totalIngresos.toFixed(2)}
+						</p>
+						<ul className="list-disc pl-5 mt-4 space-y-2">
+							{ingresos?.map((ingreso, index) => (
+								<li key={index}>
+									<strong>Fecha:</strong> {ingreso.fecha} -{" "}
+									<strong>Ingreso:</strong> S/ {ingreso.total.toFixed(2)}
+								</li>
+							))}
+						</ul>
+					</div>
+				)}
+			</div>
+		</div>
+	);
 };
 
 export default IngresosDiarios;

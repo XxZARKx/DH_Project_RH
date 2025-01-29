@@ -1,4 +1,4 @@
-import { supabase } from "../../supabaseClient";
+import { supabase } from "../../../api/supabaseClient";
 
 export const createVehicle = async (vehicle) => {
 	const { data, error } = await supabase.from("vehiculo").insert([vehicle]);

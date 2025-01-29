@@ -1,27 +1,21 @@
-// src/auth.js
-import { supabase } from "../../supabaseClient";
+import { supabase } from "../../../api/supabaseClient";
 
 export const getAuthUserById = async (userId) => {
-  try {
-    if (!userId) {
-      throw new Error("El ID de usuario es requerido.");
-    }
+	try {
+		if (!userId) {
+			throw new Error("El ID de usuario es requerido.");
+		}
 
-    // Filtramos el usuario por el ID proporcionado como parámetro
-    const { data: userDetails, error } = await supabase
-      .from("usuario") // Asumiendo que la tabla de usuarios se llama "usuario"
-      .select("*")
-      .eq("id", userId) // Filtramos por el ID del usuario
-      .single(); // Esperamos solo un resultado
+		// Llamar a la función de Supabase para obtener el usuario por ID
+		const { data, error } = await supabase.auth.admin.getUserById(userId);
 
-    if (error) {
-      throw error;
-    }
+		if (error) {
+			throw new Error(`Error al obtener el usuario: ${error.message}`);
+		}
 
-    console.log("Usuario encontrado:", userDetails);
-    return userDetails; // Devolvemos los detalles del usuario
-  } catch (error) {
-    console.error("Error al obtener el usuario por ID:", error);
-    throw new Error("No se pudo obtener el usuario.");
-  }
+		return data; // Retorna los datos del usuario
+	} catch (error) {
+		console.error(error.message);
+		throw error; // Re-lanza el error para manejarlo donde sea necesario
+	}
 };
