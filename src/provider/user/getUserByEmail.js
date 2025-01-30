@@ -1,25 +1,23 @@
 import { supabase } from "../../../api/supabaseClient";
 
 export const getUserByEmail = async (email) => {
-	try {
-		if (!email) {
-			throw new Error("El correo electrónico es requerido.");
-		}
+  try {
+    if (!email || email === "undefined") {
+      throw new Error("El correo electrónico es inválido.");
+    }
 
-		const { data, error } = await supabase
-			.from("usuario") // Asegúrate de usar el nombre correcto de tu tabla de usuarios
-			.select("*")
-			.eq("correo", email)
-			.single();
+    const { data, error } = await supabase
+      .from("usuario")
+      .select("*")
+      .eq("correo", email)
+      .single();
 
-		if (error) {
-			throw new Error(error.message);
-		}
+    if (error) {
+      throw new Error(error.message);
+    }
 
-		// console.log("from function: ", data);
-
-		return data; // Devuelve la información del usuario encontrado
-	} catch (err) {
-		throw new Error(err.message);
-	}
+    return data;
+  } catch (err) {
+    throw new Error(err.message);
+  }
 };

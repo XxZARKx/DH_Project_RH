@@ -1,9 +1,109 @@
+// import React, { useState } from "react";
+// import { useQuery } from "@tanstack/react-query";
+// import { getVehicles } from "../provider/vehicle/getVehicles";
+// import { Pie, Bar } from "react-chartjs-2";
+// import "chart.js/auto";
+
+// const PopularVehicleBrands = () => {
+//   const [view, setView] = useState("pie");
+//   const { data: vehicles = [] } = useQuery({
+//     queryKey: ["vehicles"],
+//     queryFn: getVehicles,
+//   });
+
+//   const brandCounts = vehicles.reduce((acc, vehicle) => {
+//     const brandLower = vehicle.marca.toLowerCase();
+//     if (vehicle.estado?.toLowerCase() === "reservado") {
+//       acc[brandLower] = (acc[brandLower] || 0) + 1;
+//     }
+//     return acc;
+//   }, {});
+
+//   const sortedBrands = Object.entries(brandCounts)
+//     .sort((a, b) => b[1] - a[1])
+//     .map(([brand, count]) => ({ brand, count }));
+
+//   const chartData = {
+//     labels: sortedBrands.map((b) => b.brand),
+//     datasets: [
+//       {
+//         data: sortedBrands.map((b) => b.count),
+//         backgroundColor: [
+//           "#ff6384",
+//           "#36a2eb",
+//           "#ffcd56",
+//           "#4bc0c0",
+//           "#9966ff",
+//         ],
+//       },
+//     ],
+//   };
+
+//   return (
+//     <div className="flex min-h-screen bg-gray-100">
+//       <aside className="w-64 bg-white shadow-md p-6">
+//         <h2 className="text-xl font-bold text-gray-800 mb-4">
+//           Seleccionar Vista
+//         </h2>
+//         <button
+//           className={`w-full py-2 mb-3 rounded-lg transition ${
+//             view === "pie"
+//               ? "bg-blue-500 text-white"
+//               : "bg-gray-200 text-gray-800"
+//           }`}
+//           onClick={() => setView("pie")}
+//         >
+//           Gráfico Circular 📊
+//         </button>
+//         <button
+//           className={`w-full py-2 rounded-lg transition ${
+//             view === "bar"
+//               ? "bg-blue-500 text-white"
+//               : "bg-gray-200 text-gray-800"
+//           }`}
+//           onClick={() => setView("bar")}
+//         >
+//           Gráfico de Barras 📈
+//         </button>
+//       </aside>
+
+//       <main className="flex-1 p-6">
+//         <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">
+//           Estadísticas de Marcas de Vehículos Alquilados
+//         </h2>
+
+//         <div className="max-w-2xl mx-auto bg-white p-6 shadow-md rounded-lg">
+//           {view === "pie" && <Pie data={chartData} />}
+//           {view === "bar" && (
+//             <Bar
+//               data={chartData}
+//               options={{
+//                 responsive: true,
+//                 plugins: {
+//                   legend: { display: false },
+//                 },
+//                 scales: {
+//                   x: { grid: { display: false } },
+//                   y: { beginAtZero: true },
+//                 },
+//               }}
+//             />
+//           )}
+//         </div>
+//       </main>
+//     </div>
+//   );
+// };
+
+// export default PopularVehicleBrands;
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { getVehicles } from "../provider/vehicle/getVehicles";
+import { Pie, Bar } from "react-chartjs-2";
+import "chart.js/auto";
 
 const PopularVehicleBrands = () => {
-  const [view, setView] = useState("cards"); // Estado para controlar la vista
+  const [view, setView] = useState("pie"); // Estado para controlar la vista
   const { data: vehicles = [] } = useQuery({
     queryKey: ["vehicles"],
     queryFn: getVehicles,
@@ -11,11 +111,8 @@ const PopularVehicleBrands = () => {
 
   // Contamos las marcas más alquiladas sin distinguir entre mayúsculas y minúsculas
   const brandCounts = vehicles.reduce((acc, vehicle) => {
-    const brandLower = vehicle.marca.toLowerCase(); // Convertimos la marca a minúsculas
-    if (
-      vehicle.estado &&
-      ["reservado"].includes(vehicle.estado.toLowerCase())
-    ) {
+    const brandLower = vehicle.marca.toLowerCase();
+    if (vehicle.estado?.toLowerCase() === "reservado") {
       acc[brandLower] = (acc[brandLower] || 0) + 1;
     }
     return acc;
@@ -26,175 +123,128 @@ const PopularVehicleBrands = () => {
     .sort((a, b) => b[1] - a[1])
     .map(([brand, count]) => ({ brand, count }));
 
-  // Encontramos el número máximo de alquileres para calcular el porcentaje
-  const maxCount = sortedBrands.length > 0 ? sortedBrands[0].count : 1;
+  // Datos para los gráficos
+  const chartData = {
+    labels: sortedBrands.map((b) => b.brand),
+    datasets: [
+      {
+        data: sortedBrands.map((b) => b.count),
+        backgroundColor: [
+          "#ff6384",
+          "#36a2eb",
+          "#ffcd56",
+          "#4bc0c0",
+          "#9966ff",
+        ],
+      },
+    ],
+  };
 
   return (
     <div className="flex min-h-screen bg-gray-100">
+      {/* Sidebar para seleccionar la vista */}
+      <aside className="w-64 bg-white shadow-md p-6">
+        <h2 className="text-xl font-bold text-gray-800 mb-4">
+          Seleccionar Vista
+        </h2>
+        <button
+          className={`w-full py-2 mb-3 rounded-lg transition ${
+            view === "pie"
+              ? "bg-blue-500 text-white"
+              : "bg-gray-200 text-gray-800"
+          }`}
+          onClick={() => setView("pie")}
+        >
+          Gráfico Circular 📊
+        </button>
+        <button
+          className={`w-full py-2 mb-3 rounded-lg transition ${
+            view === "bar"
+              ? "bg-blue-500 text-white"
+              : "bg-gray-200 text-gray-800"
+          }`}
+          onClick={() => setView("bar")}
+        >
+          Gráfico de Barras 📈
+        </button>
+        <button
+          className={`w-full py-2 rounded-lg transition ${
+            view === "table"
+              ? "bg-blue-500 text-white"
+              : "bg-gray-200 text-gray-800"
+          }`}
+          onClick={() => setView("table")}
+        >
+          Vista de Tabla 📋
+        </button>
+      </aside>
+
+      {/* Contenido principal */}
       <main className="flex-1 p-6">
-        <h2 className="text-3xl font-bold mb-6 text-center text-gray-700">
-          Ranking de Marcas Más Alquiladas
+        <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">
+          Distribución de Marcas de Vehículos Alquilados
         </h2>
 
-        {/* Botones para alternar entre vistas */}
-        <div className="flex justify-center space-x-4 mb-6">
-          <button
-            className={`px-4 py-2 rounded-lg ${
-              view === "list"
-                ? "bg-blue-500 text-white"
-                : "bg-gray-300 text-gray-700"
-            }`}
-            onClick={() => setView("list")}
-          >
-            Vista Tabla
-          </button>
-          <button
-            className={`px-4 py-2 rounded-lg ${
-              view === "cards"
-                ? "bg-blue-500 text-white"
-                : "bg-gray-300 text-gray-700"
-            }`}
-            onClick={() => setView("cards")}
-          >
-            Vista en Tarjetas
-          </button>
+        <div className="max-w-2xl mx-auto bg-white p-6 shadow-md rounded-lg">
+          {/* Vista de Gráfico Circular */}
+          {view === "pie" && <Pie data={chartData} />}
+
+          {/* Vista de Gráfico de Barras */}
+          {view === "bar" && (
+            <Bar
+              data={chartData}
+              options={{
+                responsive: true,
+                plugins: {
+                  legend: { display: false },
+                },
+                scales: {
+                  x: { grid: { display: false } },
+                  y: { beginAtZero: true },
+                },
+              }}
+            />
+          )}
+
+          {/* Vista de Tabla */}
+          {view === "table" && (
+            <div className="overflow-x-auto">
+              <table className="min-w-full bg-white">
+                <thead>
+                  <tr>
+                    <th className="px-6 py-3 border-b-2 border-gray-200 text-left text-sm font-semibold text-gray-600">
+                      Posición
+                    </th>
+                    <th className="px-6 py-3 border-b-2 border-gray-200 text-left text-sm font-semibold text-gray-600">
+                      Marca
+                    </th>
+                    <th className="px-6 py-3 border-b-2 border-gray-200 text-left text-sm font-semibold text-gray-600">
+                      Alquileres
+                    </th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {sortedBrands.map((brand, index) => (
+                    <tr
+                      key={brand.brand}
+                      className="hover:bg-gray-50 transition-colors duration-200"
+                    >
+                      <td className="px-6 py-4 border-b border-gray-200 text-sm font-semibold text-gray-800">
+                        {index + 1}
+                      </td>
+                      <td className="px-6 py-4 border-b border-gray-200 text-sm font-semibold text-gray-800">
+                        {brand.brand}
+                      </td>
+                      <td className="px-6 py-4 border-b border-gray-200 text-sm font-semibold text-gray-800">
+                        {brand.count}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
-
-        {/* Vista en Tarjetas */}
-        {view === "cards" && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {sortedBrands.length ? (
-              sortedBrands.map((brand, index) => (
-                <div
-                  key={brand.brand}
-                  className={`p-6 rounded-lg shadow-lg transform transition-all duration-300 ease-in-out ${
-                    index === 0
-                      ? "bg-yellow-200 hover:bg-yellow-300"
-                      : index === 1
-                      ? "bg-blue-200 hover:bg-blue-300"
-                      : index === 2
-                      ? "bg-green-200 hover:bg-green-300"
-                      : "bg-white hover:bg-gray-100"
-                  }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center">
-                      <span
-                        className={`text-2xl font-bold text-gray-800 mr-4 ${
-                          index === 0
-                            ? "text-yellow-600"
-                            : index === 1
-                            ? "text-blue-600"
-                            : index === 2
-                            ? "text-green-600"
-                            : "text-gray-800"
-                        }`}
-                      >
-                        {index === 0
-                          ? "🥇"
-                          : index === 1
-                          ? "🥈"
-                          : index === 2
-                          ? "🥉"
-                          : ""}
-                      </span>
-                      <span className="text-xl font-semibold text-gray-800">
-                        {brand.brand}
-                      </span>
-                    </div>
-
-                    <div className="flex items-center space-x-2">
-                      <div className="w-2/3 bg-gray-200 rounded-full h-3 relative">
-                        <div
-                          className="h-3 rounded-full"
-                          style={{
-                            width: `${(brand.count / maxCount) * 100}%`,
-                            backgroundColor: "#4CAF50",
-                          }}
-                        ></div>
-                      </div>
-                      <span className="text-lg font-medium text-gray-800">
-                        {brand.count}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <div className="text-center text-gray-500">
-                No hay vehículos alquilados actualmente.
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Vista tablas */}
-        {view === "list" && (
-          <div className="space-y-4">
-            {sortedBrands.length ? (
-              sortedBrands.map((brand, index) => (
-                <div
-                  key={brand.brand}
-                  className={`p-6 rounded-lg shadow-lg transform transition-all duration-300 ease-in-out ${
-                    index === 0
-                      ? "bg-yellow-200 hover:bg-yellow-300"
-                      : index === 1
-                      ? "bg-blue-200 hover:bg-blue-300"
-                      : index === 2
-                      ? "bg-green-200 hover:bg-green-300"
-                      : "bg-white hover:bg-gray-100"
-                  }`}
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center">
-                      <span
-                        className={`text-2xl font-bold text-gray-800 mr-4 ${
-                          index === 0
-                            ? "text-yellow-600"
-                            : index === 1
-                            ? "text-blue-600"
-                            : index === 2
-                            ? "text-green-600"
-                            : "text-gray-800"
-                        }`}
-                      >
-                        {index === 0
-                          ? "🥇"
-                          : index === 1
-                          ? "🥈"
-                          : index === 2
-                          ? "🥉"
-                          : ""}
-                      </span>
-                      <span className="text-xl font-semibold text-gray-800">
-                        {brand.brand}
-                      </span>
-                    </div>
-
-                    <div className="flex items-center space-x-2">
-                      <div className="w-2/3 bg-gray-200 rounded-full h-3 relative">
-                        <div
-                          className="h-3 rounded-full"
-                          style={{
-                            width: `${(brand.count / maxCount) * 100}%`,
-                            backgroundColor: "#4CAF50",
-                          }}
-                        ></div>
-                      </div>
-                      <span className="text-lg font-medium text-gray-800">
-                        {brand.count}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              ))
-            ) : (
-              <div className="text-center text-gray-500">
-                No hay vehículos alquilados actualmente.
-              </div>
-            )}
-          </div>
-        )}
       </main>
     </div>
   );
