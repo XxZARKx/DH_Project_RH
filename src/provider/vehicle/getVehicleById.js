@@ -6,9 +6,7 @@ export const getVehicleById = async (id) => {
 			.from("vehiculo")
 			.select("*")
 			.eq("id", id)
-			.single(); // Asegúrate de que esperas un solo registro
-
-		// console.log("Datos del vehículo:", data);
+			.single();
 
 		if (error) {
 			throw new Error(error.message);
