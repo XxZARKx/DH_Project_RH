@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Home from "./components/Home";
 import Login from "./components/Login";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Register from "./components/Register";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -27,33 +27,27 @@ const getUserFromLocalStorage = () => {
   }
 };
 
-// Función para detectar si el usuario está en un dispositivo móvil
 const isMobileDevice = () => {
-  return window.innerWidth < 768; // Define el ancho máximo para dispositivos móviles
+  return window.innerWidth < 768;
 };
 
 function App() {
   const user = getUserFromLocalStorage();
 
-  // Estado para almacenar si el usuario está en un dispositivo móvil
   const [isMobile, setIsMobile] = useState(isMobileDevice());
 
-  // Efecto para detectar cambios en el tamaño de la pantalla
   useEffect(() => {
     const handleResize = () => {
       setIsMobile(isMobileDevice());
     };
 
-    // Añadir el listener para el evento resize
     window.addEventListener("resize", handleResize);
 
-    // Limpieza del listener cuando el componente se desmonta
     return () => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
 
-  // Componente que maneja el acceso denegado para dispositivos móviles
   const MobileAccessDenied = () => {
     return (
       <div style={{ textAlign: "center", marginTop: "50px" }}>
@@ -87,29 +81,20 @@ function App() {
           <Route path="/reservation/:id" element={<ReservaVehiculo />} />
           <Route path="/mis-reservas" element={<MisReservas />} />
 
-          {/* Rutas protegidas */}
           <Route
             path="/register/admin"
             element={
-              isMobile ? (
-                <MobileAccessDenied />
-              ) : (
-                <ProtectedRoute user={user} requiredTipo={1}>
-                  <Register tipo={1} titulo="Registrar Empleado" />
-                </ProtectedRoute>
-              )
+              <ProtectedRoute user={user} requiredTipo={1}>
+                <Register tipo={1} titulo="Registrar Empleado" />
+              </ProtectedRoute>
             }
           />
           <Route
             path="/vehicles/register"
             element={
-              isMobile ? (
-                <MobileAccessDenied />
-              ) : (
-                <ProtectedRoute user={user} requiredTipo={1}>
-                  <RegistrarVehiculo />
-                </ProtectedRoute>
-              )
+              <ProtectedRoute user={user} requiredTipo={1}>
+                <RegistrarVehiculo />
+              </ProtectedRoute>
             }
           />
           <Route
@@ -137,7 +122,6 @@ function App() {
             }
           />
 
-          {/* Ruta para página no encontrada */}
           <Route path="*" element={<div>Página no encontrada</div>} />
           <Route path="/access-denied" element={<AccessDenied />} />
         </Routes>
