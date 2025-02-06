@@ -18,7 +18,6 @@ const VehiculosDisponibles = () => {
     queryFn: getVehicles,
   });
 
-  // Filtrar solo los vehículos con estado "Disponible"
   const availableVehicles = vehicles.filter(
     (vehicle) => vehicle.estado === "Disponible"
   );
@@ -52,13 +51,13 @@ const VehiculosDisponibles = () => {
   return (
     <div>
       <Header />
-      <div className="min-h-screen flex items-center justify-center py-10 w-[80%] mx-auto px-10">
-        <div className="bg-white shadow-lg rounded-lg p-8 w-[84%] flex items-center justify-center flex-col min-h-[820px] relative pb-20">
-          <h2 className="text-2xl font-bold text-gray-700 text-center mb-6">
+      <div className="min-h-screen flex items-center justify-center py-10 w-full sm:w-[90%] mx-auto px-6">
+        <div className="bg-white shadow-lg rounded-lg p-6  w-full sm:w-[80%] flex items-center justify-center flex-col min-h-[820px] relative pb-24 lg:pb-18">
+          <h2 className="text-xl sm:text-2xl font-bold text-gray-700 text-center mb-6">
             Vehículos Disponibles
           </h2>
           <ul
-            className="flex flex-wrap justify-center gap-10 w-full items-start"
+            className="flex flex-wrap justify-center gap-6 sm:gap-10 w-full items-start"
             style={{ minHeight: "500px" }}
           >
             {currentVehicles.length > 0 ? (
@@ -74,7 +73,7 @@ const VehiculosDisponibles = () => {
               <li className="text-gray-600">No hay vehículos disponibles.</li>
             )}
           </ul>
-          <div className="flex justify-center mt-6 absolute bottom-5">
+          <div className="flex justify-center mt-6 absolute bottom-5 w-full px-4">
             {Array.from({ length: totalPages }, (_, index) => (
               <button
                 key={index}

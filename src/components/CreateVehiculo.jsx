@@ -119,21 +119,18 @@ const CreateVehicleForm = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#E4E4E4] flex items-center justify-center relative py-10">
-      {/* Spinner */}
+    <div className="min-h-screen bg-[#E4E4E4] flex items-center justify-center relative py-10 px-4">
       {isLoading && (
         <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-white"></div>
         </div>
       )}
 
-      {/* Formulario */}
       <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
         <h2 className="text-2xl font-bold text-gray-700 text-center mb-6">
           Crear Vehículo
         </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Form Inputs */}
           <input
             type="text"
             name="marca"
@@ -160,7 +157,6 @@ const CreateVehicleForm = () => {
             className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
 
-          {/* Cuadro de imagen */}
           <div className="relative w-full">
             <label
               htmlFor="file-input"
@@ -193,7 +189,6 @@ const CreateVehicleForm = () => {
             </label>
           </div>
 
-          {/* Preview de la imagen */}
           {imagePreview && (
             <div className="mt-4">
               <img
@@ -204,7 +199,6 @@ const CreateVehicleForm = () => {
             </div>
           )}
 
-          {/* Resto del formulario */}
           <select
             name="cantidadpersonas"
             value={formData.cantidadpersonas}
