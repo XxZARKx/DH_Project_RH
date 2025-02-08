@@ -125,19 +125,19 @@ const VehicleAvailabilityReport = () => {
 						Detalles de Vehículos
 					</h3>
 					<div className="overflow-x-auto">
-						<table className="min-w-full bg-white">
+						<table className="min-w-full bg-white border border-gray-200">
 							<thead>
-								<tr>
-									<th className="px-6 py-3 border-b-2 border-gray-200 text-left text-sm font-semibold text-gray-600">
+								<tr className="bg-gray-100">
+									<th className="px-4 py-3 border-b text-left text-xs md:text-sm font-semibold text-gray-600">
 										Marca
 									</th>
-									<th className="px-6 py-3 border-b-2 border-gray-200 text-left text-sm font-semibold text-gray-600">
+									<th className="px-4 py-3 border-b text-left text-xs md:text-sm font-semibold text-gray-600">
 										Modelo
 									</th>
-									<th className="px-6 py-3 border-b-2 border-gray-200 text-left text-sm font-semibold text-gray-600">
+									<th className="px-4 py-3 border-b text-left text-xs md:text-sm font-semibold text-gray-600">
 										Estado
 									</th>
-									<th className="px-6 py-3 border-b-2 border-gray-200 text-left text-sm font-semibold text-gray-600">
+									<th className="px-4 py-3 border-b text-left text-xs md:text-sm font-semibold text-gray-600">
 										Ingresos Generados (S/)
 									</th>
 								</tr>
@@ -148,14 +148,14 @@ const VehicleAvailabilityReport = () => {
 									return (
 										<tr
 											key={vehicle.id}
-											className="hover:bg-gray-50 transition-colors duration-200">
-											<td className="px-6 py-4 border-b border-gray-200 text-sm font-semibold text-gray-800">
+											className="hover:bg-gray-50 transition-colors duration-200 text-xs md:text-sm">
+											<td className="px-4 py-3 border-b text-gray-800 font-medium">
 												{vehicle.marca}
 											</td>
-											<td className="px-6 py-4 border-b border-gray-200 text-sm font-semibold text-gray-800">
+											<td className="px-4 py-3 border-b text-gray-800 font-medium">
 												{vehicle.modelo}
 											</td>
-											<td className="px-6 py-4 border-b border-gray-200 text-sm font-semibold text-gray-800">
+											<td className="px-4 py-3 border-b">
 												<span
 													className={`px-2 py-1 rounded-full text-xs ${
 														estaReservado
@@ -165,7 +165,7 @@ const VehicleAvailabilityReport = () => {
 													{estaReservado ? "Reservado" : "Disponible"}
 												</span>
 											</td>
-											<td className="px-6 py-4 border-b border-gray-200 text-sm font-semibold text-gray-800">
+											<td className="px-4 py-3 border-b text-gray-800 font-medium">
 												{ingresosReservados?.[vehicle.id]?.toFixed(2) || "0.00"}
 											</td>
 										</tr>

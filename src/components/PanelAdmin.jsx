@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import Header from "./Header";
 import Footer from "./Footer";
@@ -12,6 +12,7 @@ import VehicleAvailabilityReport from "./DisponibilidadVehiculo";
 
 const PanelAdmin = () => {
 	const { pestania } = useParams();
+	const [isMenuOpen, setIsMenuOpen] = useState(false);
 
 	let panelContent;
 
@@ -46,8 +47,16 @@ const PanelAdmin = () => {
 	return (
 		<div>
 			<Header />
-			<div className="flex">
-				<aside className="w-1/5 bg-gray-800 text-white p-6 space-y-6 shadow-md min-h-screen">
+			<div className="flex flex-col md:flex-row">
+				<button
+					onClick={() => setIsMenuOpen(!isMenuOpen)}
+					className="md:hidden p-4 bg-gray-800 text-white text-center">
+					{isMenuOpen ? "Cerrar Menú" : "Abrir Menú"}
+				</button>
+				<aside
+					className={`${
+						isMenuOpen ? "block" : "hidden"
+					} md:block w-full md:w-1/5 bg-gray-800 text-white p-6 space-y-6 shadow-md min-h-screen`}>
 					<h2 className="text-2xl font-bold text-center">Panel Admin</h2>
 					<ul className="space-y-4 text-lg">
 						<li>
@@ -64,7 +73,6 @@ const PanelAdmin = () => {
 								Autos Disponibles
 							</Link>
 						</li>
-
 						<li>
 							<Link
 								to="/admin/panel/ingresos"
@@ -95,7 +103,7 @@ const PanelAdmin = () => {
 						</li>
 					</ul>
 				</aside>
-				<main className="w-4/5 p-6">{panelContent}</main>
+				<main className="w-full md:w-4/5 p-6">{panelContent}</main>
 			</div>
 			<Footer />
 		</div>
