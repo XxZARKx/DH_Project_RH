@@ -10,46 +10,46 @@ const IngresosDiarios = () => {
 	const [endDate, setEndDate] = useState(null);
 
 	const fetchIngresos = async () => {
-		const startDateISO = startDate
-			? new Date(new Date(startDate).setHours(0, 0, 0, 0)).toISOString()
-			: "1970-01-01T00:00:00.000Z";
-
-		const endDateISO = endDate
-			? endDate.toISOString()
-			: new Date().toISOString();
-
+		if (!startDate || !endDate) return [];
+	
+		const startDateUTC = new Date(startDate);
+		startDateUTC.setUTCHours(0, 0, 0, 0);
+	
+		const endDateUTC = new Date(endDate);
+		endDateUTC.setUTCHours(23, 59, 59, 999);
+	
 		const { data, error } = await supabase
 			.from("reserva")
 			.select("total, fecha_reserva")
-			.gte("fecha_reserva", startDateISO)
-			.lte("fecha_reserva", endDateISO);
-
+			.gte("fecha_reserva", startDateUTC.toISOString())
+			.lte("fecha_reserva", endDateUTC.toISOString());
+	
 		if (error) {
 			console.error("Error al obtener ingresos:", error);
 			throw new Error(error.message);
 		}
-
+	
 		const ingresosAgrupados = data.reduce((acc, ingreso) => {
-			const fecha = new Date(ingreso.fecha_reserva).toLocaleDateString();
+			const fecha = new Date(ingreso.fecha_reserva).toLocaleDateString("es-PE", {
+				timeZone: "America/Lima",
+			});
+	
 			if (!acc[fecha]) {
 				acc[fecha] = 0;
 			}
 			acc[fecha] += ingreso.total;
 			return acc;
 		}, {});
-
+	
 		const ingresosArray = Object.entries(ingresosAgrupados).map(
-			([fecha, total]) => ({
-				fecha,
-				total,
-			})
+			([fecha, total]) => ({ fecha, total })
 		);
-
+	
 		ingresosArray.sort((a, b) => new Date(a.fecha) - new Date(b.fecha));
-
+	
 		return ingresosArray;
 	};
-
+	
 	const {
 		data: ingresos,
 		isLoading,
