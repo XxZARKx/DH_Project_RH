@@ -6,29 +6,32 @@ import CarrouselColabs from "./CarrouselColabs";
 import CustomizedAccordions from "./PreguntasAcordeon";
 import Footer from "./Footer";
 import { getVehicles } from "../provider/vehicle/getVehicles";
+import Usuarios from "./test/Usuarios";
 
 const Home = () => {
-	const [vehicles, setVehicles] = useState([]);
-	const [isLoading, setIsLoading] = useState(true);
+  const [vehicles, setVehicles] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-	useEffect(() => {
-		const fetchVehicles = async () => {
-			setIsLoading(true);
-			const vehicleData = await getVehicles();
-			setVehicles(vehicleData);
-			setIsLoading(false);
-		};
+  useEffect(() => {
+    const fetchVehicles = async () => {
+      setIsLoading(true);
+      const vehicleData = await getVehicles();
+      setVehicles(vehicleData);
+      setIsLoading(false);
+    };
 
-		fetchVehicles();
-	}, []);
+    fetchVehicles();
+  }, []);
 
-	if (isLoading) {
-		return <div>Cargando vehículos...</div>;
-	}
+  if (isLoading) {
+    return <div>Cargando vehículos...</div>;
+  }
 
-	return (
-		<div className="min-h-screen max-w-screen ">
-			<div className="max-h-screen h-full overflow-hidden mb-10">
+  return (
+    <div className="min-h-screen max-w-screen ">
+      hola
+      <Usuarios />
+      {/* <div className="max-h-screen h-full overflow-hidden mb-10">
 				<Header />
 				<Banner />
 			</div>
@@ -66,9 +69,9 @@ const Home = () => {
 					<CustomizedAccordions />
 				</div>
 			</section>
-			<Footer />
-		</div>
-	);
+			<Footer /> */}
+    </div>
+  );
 };
 
 export default Home;
